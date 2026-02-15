@@ -5,9 +5,16 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 pygame.init()
 
+def show_hint():
+        hint_surface = font.render('Press E', False, (0, 255, 0))
+        screen.blit(hint_surface, (sx / 20, sy - font_size_medium * 2))
+
 sx, sy = 1280, 720
 screen = pygame.display.set_mode((sx, sy))
 pygame.display.set_caption("ScamSimulator")
+camera_x = 0
+camera_y = 0
+speed = 10
 
 running = True
 fps = 30
@@ -30,12 +37,8 @@ object_path = os.path.join(BASE_DIR, "object.png")
 object_img = pygame.image.load(object_path).convert_alpha()
 object_image = pygame.transform.scale(object_img, (100, 50))
 
-object_rect = object_image.get_rect()
-object_rect.topleft = (700, 400)
-
-camera_x = 0
-camera_y = 0
-speed = 10
+object_rect = object_image.get_rect(topleft=(700, 400))
+collision_object_rect = object_rect.inflate(speed * 2, speed * 2)
 
 
 move_interval = 0.01
@@ -43,11 +46,13 @@ time_since_last_move = 0
 
 while running:
     dt = clock.tick(fps) / 1000
-    render_action_hint = False
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                print("action")
 
     time_since_last_move += dt
     keys = pygame.key.get_pressed()
@@ -82,7 +87,6 @@ while running:
             camera_y += speed
         if keys[pygame.K_s]:
             camera_y -= speed
-        render_action_hint = True
         
     
     screen.fill((0, 0, 0))
@@ -96,12 +100,15 @@ while running:
 
     screen.blit(player_image, player_screen_rect)
 
-    if render_action_hint:
-        hint_surface = font.render('Press E', False, (0, 255, 0))
-        screen.blit(hint_surface, (sx / 20, sy - font_size_medium * 2))
-    else:
-        hint_surface = font.render('', False, (0, 255, 0))
-        screen.blit(hint_surface, (sx / 20, sy - font_size_medium * 2))
+    colliding_with_objeect = player_world_rect.colliderect(collision_object_rect)
+
+    if colliding_with_objeect:
+        show_hint()
+
+        if keys[pygame.K_e] and not e_pressed_last_frame:
+            print("action")
+
+    e_pressed_last_frame = keys[pygame.K_e]
 
     pygame.display.flip()
 
