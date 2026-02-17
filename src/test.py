@@ -11,6 +11,9 @@ def show_hint():
 
 sx, sy = 1280, 720
 screen = pygame.display.set_mode((sx, sy))
+sxm, sym = sx/2, sy/2
+minigame_screen = pygame.Rect(((sx - sxm) / 2 ,(sy - sym) / 2), (sxm, sym))
+
 pygame.display.set_caption("ScamSimulator")
 camera_x = 0
 camera_y = 0
@@ -43,6 +46,7 @@ collision_object_rect = object_rect.inflate(speed * 2, speed * 2)
 
 move_interval = 0.01
 time_since_last_move = 0
+game_state = "main"
 
 while running:
     dt = clock.tick(fps) / 1000
@@ -50,65 +54,70 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_e:
-                print("action")
+    if game_state == "main":
+        time_since_last_move += dt
+        keys = pygame.key.get_pressed()
+        lastKey = ""
 
-    time_since_last_move += dt
-    keys = pygame.key.get_pressed()
-    lastKey = ""
+        if time_since_last_move >= move_interval:
+            if keys[pygame.K_a]:
+                lastKey = "a"
+                camera_x -= speed
+            if keys[pygame.K_d]:
+                lastKey = "d"
+                camera_x += speed
+            if keys[pygame.K_w]:
+                lastKey = "w"
+                camera_y -= speed
+            if keys[pygame.K_s]:
+                lastKey = "s"
+                camera_y += speed
+            time_since_last_move = 0
 
-    if time_since_last_move >= move_interval:
-        if keys[pygame.K_a]:
-            lastKey = "a"
-            camera_x -= speed
-        if keys[pygame.K_d]:
-            lastKey = "d"
-            camera_x += speed
-        if keys[pygame.K_w]:
-            lastKey = "w"
-            camera_y -= speed
-        if keys[pygame.K_s]:
-            lastKey = "s"
-            camera_y += speed
-        time_since_last_move = 0
+        player_world_rect.center = (
+            camera_x + sx // 2,
+            camera_y + sy // 2
+        )
 
-    player_world_rect.center = (
-        camera_x + sx // 2,
-        camera_y + sy // 2
-    )
-
-    if player_world_rect.colliderect(object_rect):
-        if keys[pygame.K_a]:
-            camera_x += speed
-        if keys[pygame.K_d]:
-            camera_x -= speed
-        if keys[pygame.K_w]:
-            camera_y += speed
-        if keys[pygame.K_s]:
-            camera_y -= speed
+        if player_world_rect.colliderect(object_rect):
+            if keys[pygame.K_a]:
+                camera_x += speed
+            if keys[pygame.K_d]:
+                camera_x -= speed
+            if keys[pygame.K_w]:
+                camera_y += speed
+            if keys[pygame.K_s]:
+                camera_y -= speed
+    if game_state == "minigame":
+        print("minigame activated")
         
     
-    screen.fill((0, 0, 0))
 
-    screen.blit(background_image, (-camera_x, -camera_y))
+    if game_state == "main":
 
-    screen.blit(
-        object_image,
-        (object_rect.x - camera_x, object_rect.y - camera_y)
-    )
+        screen.fill((0, 0, 0))
 
-    screen.blit(player_image, player_screen_rect)
+        screen.blit(background_image, (-camera_x, -camera_y))
 
-    colliding_with_objeect = player_world_rect.colliderect(collision_object_rect)
+        screen.blit(
+            object_image,
+            (object_rect.x - camera_x, object_rect.y - camera_y)
+        )
 
-    if colliding_with_objeect:
-        show_hint()
+        screen.blit(player_image, player_screen_rect)
 
-        if keys[pygame.K_e] and not e_pressed_last_frame:
-            print("action")
+        colliding_with_objeect = player_world_rect.colliderect(collision_object_rect)
 
-    e_pressed_last_frame = keys[pygame.K_e]
+        if colliding_with_objeect:
+            show_hint()
+
+            if keys[pygame.K_e] and game_state == "main":
+                game_state = "minigame"
+                print("action")
+
+
+    if game_state == "minigame":
+        pygame.draw.rect(screen, (0, 0, 0), minigame_screen)
 
     pygame.display.flip()
 
