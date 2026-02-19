@@ -25,6 +25,16 @@ clock = pygame.time.Clock()
 font_size_medium = 30
 font = pygame.font.SysFont('Comic Sans MS', font_size_medium)
 
+center_x = sxm / 2
+center_y = sym / 2
+
+def minigame_player_reset():
+    minigame_player = pygame.Rect(((sx - sxm / 20) / 3,(sy - sym / 20) / 1.5), (sxm / 20, sxm / 20))
+    return minigame_player
+minigame_player = minigame_player_reset()
+minigame_finish = pygame.Rect(((sx - sxm / 20) / 1.5,(sy - sym / 20) / 3), (sxm / 20, sxm / 20))
+minigame_enemy = pygame.Rect(((sx - sxm / 20) / 2,(sy - sym / 20) / 2), (sxm / 20, sxm / 20))
+
 player_path = os.path.join(BASE_DIR, "player.png")
 player_img = pygame.image.load(player_path).convert_alpha()
 player_image = pygame.transform.scale(player_img, (50, 50))
@@ -57,20 +67,19 @@ while running:
     if game_state == "main":
         time_since_last_move += dt
         keys = pygame.key.get_pressed()
-        lastKey = ""
-
+        
         if time_since_last_move >= move_interval:
             if keys[pygame.K_a]:
-                lastKey = "a"
+                
                 camera_x -= speed
             if keys[pygame.K_d]:
-                lastKey = "d"
+                
                 camera_x += speed
             if keys[pygame.K_w]:
-                lastKey = "w"
+                
                 camera_y -= speed
             if keys[pygame.K_s]:
-                lastKey = "s"
+                
                 camera_y += speed
             time_since_last_move = 0
 
@@ -88,10 +97,37 @@ while running:
                 camera_y += speed
             if keys[pygame.K_s]:
                 camera_y -= speed
-    if game_state == "minigame":
-        print("minigame activated")
         
-    
+    if game_state == "minigame":
+        
+        time_since_last_move += dt
+        keys = pygame.key.get_pressed()
+        minigame_speed = 10
+        if time_since_last_move >= move_interval:
+            if keys[pygame.K_a]:
+                if minigame_player.left - minigame_speed >= center_x:
+                    minigame_player.x -= minigame_speed
+            if keys[pygame.K_d]:
+                if minigame_player.right + minigame_speed <= center_x:
+                    minigame_player.x += minigame_speed
+            if keys[pygame.K_w]:
+                if minigame_player.top - minigame_speed >= center_y:
+                    minigame_player.y -= minigame_speed
+            if keys[pygame.K_s]:
+                if minigame_player.bottom + minigame_speed <= center_y:
+                    minigame_player.y += minigame_speed
+            time_since_last_move = 0
+
+        if minigame_player.colliderect(minigame_finish):
+            minigame_player = minigame_player_reset()
+            minigame_state = "win"
+            game_state = "main"
+            print("win")
+        if minigame_player.colliderect(minigame_enemy):
+            minigame_player = minigame_player_reset()
+            minigame_state = "win"
+            game_state = "main"
+            print("lose")
 
     if game_state == "main":
 
@@ -118,6 +154,9 @@ while running:
 
     if game_state == "minigame":
         pygame.draw.rect(screen, (0, 0, 0), minigame_screen)
+        pygame.draw.rect(screen, (0, 255, 0), minigame_finish)
+        pygame.draw.rect(screen, (255, 0, 0), minigame_player)
+        pygame.draw.rect(screen, (0, 0, 255), minigame_enemy)
 
     pygame.display.flip()
 
