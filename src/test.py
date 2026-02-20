@@ -105,16 +105,16 @@ while running:
         minigame_speed = 10
         if time_since_last_move >= move_interval:
             if keys[pygame.K_a]:
-                if minigame_player.left - minigame_speed >= center_x:
+                if minigame_player.left - minigame_speed >= (sx - sxm) / 2 + sxm / 20:
                     minigame_player.x -= minigame_speed
             if keys[pygame.K_d]:
-                if minigame_player.right + minigame_speed <= center_x:
+                if minigame_player.right - minigame_speed <= sxm + (sx - sxm) / 2 - sxm / 20:
                     minigame_player.x += minigame_speed
             if keys[pygame.K_w]:
-                if minigame_player.top - minigame_speed >= center_y:
+                if minigame_player.top - minigame_speed >= (sy - sym) / 2 + sym / 20:
                     minigame_player.y -= minigame_speed
             if keys[pygame.K_s]:
-                if minigame_player.bottom + minigame_speed <= center_y:
+                if minigame_player.bottom - minigame_speed <= sym + (sy - sym) / 2 - sxm / 20:
                     minigame_player.y += minigame_speed
             time_since_last_move = 0
 
