@@ -26,8 +26,8 @@ class MainWorld:
     def update(self, dt, screen):
         keys = pygame.key.get_pressed()
         self.game.player.move_world(keys, self.camera)
-
-        if keys[pygame.K_e]:
+        print(self.game.current_state)
+        if keys[pygame.K_e] and self.object_rect.colliderect(self.game.player.rect.move(self.camera)):
             self.game.current_state = MiniGame(self.game, screen)
 
     def draw(self, screen):
