@@ -3,16 +3,16 @@ from settings import *
 from entities.entities import Enemy
 
 class MiniGame:
-    def __init__(self, game):
+    def __init__(self, game, screen):
         self.game = game
-
+        self.main_screen = screen
         self.player = pygame.Rect((WIDTH - WIDTH / 2) / 2 + (WIDTH / 2) / 20, (HEIGHT - HEIGHT / 2) / 2 + HEIGHT / 2 - ((WIDTH / 2) / 20 + 10), (WIDTH / 2) / 20, (WIDTH / 2) / 20)
         self.finish = pygame.Rect((WIDTH - WIDTH / 2) / 2 + WIDTH / 2 - ((WIDTH / 2) / 20 + 10), (HEIGHT - HEIGHT / 2) / 2 + (WIDTH / 2) / 20, (WIDTH / 2) / 20, (WIDTH / 2) / 20)
-        self.rect = pygame.Rect((WIDTH // 4),(HEIGHT // 4),(WIDTH // 2),(HEIGHT // 2)) 
-        self.surface = pygame.Surface(self.rect.size)
-        self.enemy = Enemy(pygame.Rect((WIDTH / 4), (HEIGHT / 4), (WIDTH / 2) / 20, (WIDTH / 2) / 20), self.surface)
+        self.rect = pygame.Rect(((WIDTH - WIDTH / 2) / 2 ,(HEIGHT - HEIGHT / 2) / 2), (WIDTH / 2, HEIGHT / 2)) 
+        
+        self.enemy = Enemy(pygame.Rect((WIDTH / 4), (HEIGHT / 4), (WIDTH / 2) / 20, (WIDTH / 2) / 20), self.main_screen)
 
-    def update(self, dt):
+    def update(self, dt, screen):
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
@@ -45,10 +45,8 @@ class MiniGame:
         #     )
         #     self.game.current_state = self.game.main_world
 
-    def draw(self, screen):
-        self.surface.fill((20, 20, 20))
-        pygame.draw.rect(self.surface, GREEN, self.finish.move(-self.rect.x, -self.rect.y))
-        pygame.draw.rect(self.surface, RED, self.player.move(-self.rect.x, -self.rect.y))
-        self.enemy.draw(self.surface)
-        pygame.draw.rect(screen, (255, 255, 255), self.rect, 2)
-        screen.blit(self.surface, self.rect.topleft)
+    def draw(self, main_screen):
+        pygame.draw.rect(self.main_screen, (10, 10, 10), self.rect)
+        pygame.draw.rect(self.main_screen, GREEN, self.finish)
+        pygame.draw.rect(self.main_screen, RED, self.player)
+        self.enemy.draw(self.main_screen)

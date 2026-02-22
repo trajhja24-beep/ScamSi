@@ -23,12 +23,12 @@ class MainWorld:
         self.object_image = pygame.transform.scale(self.object_image, (100, 50))
         self.object_rect = self.object_image.get_rect(topleft=(700, 400))
 
-    def update(self, dt):
+    def update(self, dt, screen):
         keys = pygame.key.get_pressed()
         self.game.player.move_world(keys, self.camera)
 
         if keys[pygame.K_e]:
-            self.game.current_state = MiniGame(self.game)
+            self.game.current_state = MiniGame(self.game, screen)
 
     def draw(self, screen):
         screen.fill(BLACK)
