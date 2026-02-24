@@ -1,10 +1,10 @@
 import pygame
+from settings import FONT
 
 class ProgressBar:
     def __init__(self, x, y, width, height):
         self.border_rect = pygame.Rect(x, y, width, height)
         self.progress = 0
-
     def set(self, value):
         self.progress = max(0, min(100, value))
 
@@ -15,3 +15,9 @@ class ProgressBar:
 
         pygame.draw.rect(screen, (255, 0, 0), fill_rect)
         pygame.draw.rect(screen, (255, 255, 255), self.border_rect, 2)
+class RenderText:
+    def __init__(self, x, y, color, msg):
+        self.position = [x, y]
+        self.hint_surface = FONT.render(msg, False, color)
+    def draw(self, screen):
+        screen.blit(self.hint_surface, self.position)

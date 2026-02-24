@@ -20,15 +20,15 @@ player_path = os.path.join(BASE_DIR, "assets", "player.png")
 player_img = pygame.image.load(player_path).convert_alpha()
 player_img = pygame.transform.scale(player_img, (50, 50))
 
-player = Player(player_img, (WIDTH // 2, HEIGHT // 2))
 
 progress_bar = ProgressBar(WIDTH - 250, HEIGHT - 40, 200, 20)
 
 class Game:
     def __init__(self):
-        self.player = player
+        
         self.progress_bar = progress_bar
         self.main_world = MainWorld(self)
+        self.player = Player(player_img, (WIDTH // 2, HEIGHT // 2), self.main_world)
         self.current_state = self.main_world
 
 game = Game()
