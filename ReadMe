@@ -1,0 +1,8 @@
+How to run this
+  Download phyton.
+  Download pygame-ce
+    pip install pygame-ce (paste this to CMD)
+  Run the main.py script.
+    Paste cd C:\"root to the main folder"\ScamSi to the CMD
+    Paste py main.py to CMD
+    
