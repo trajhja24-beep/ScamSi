@@ -1,0 +1,6 @@
+assets
+entities
+global_set
+old
+venv
+worlds

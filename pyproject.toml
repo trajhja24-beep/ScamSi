@@ -1,31 +1,39 @@
 [project]
-name = "scamSi"
+name = "ScamSi"
 version = "0.0.1"
 authors = [
   { name="Jakub Trajhan", email="trajhja24@sps-prosek.cz" },
 ]
 
-description = "game or whatever"
-readme = "README.md"
+description = "Simple gui library for pygame"
+readme = "ReadMe.txt"
 requires-python = ">=3.11"
-
-dependencies = [
-    "pygame-ce"
-]
-
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
 
+dependencies = [
+  "pygame>=2.0"
+]
 
+
+# zde muzete zadefinovat spustitelne skripty (tj. pokud pisete knihovnu, tak zde muzete definovat jak spustit nejaky priklad pouziti knihovny)
 [project.scripts]
-scamSi = "scamSi.src.main:main"
+ScamSi = "main:main"
 
+
+[project.urls]
+Homepage = "https://github.com/trajhja24-beep/ScamSi/tree/main"
+Issues = "https://github.com/trajhja24-beep/ScamSi/tree/main"
 
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+package-dir = {"" = "src"}
+
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
+

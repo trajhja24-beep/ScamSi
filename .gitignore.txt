@@ -1,16 +1,35 @@
+# Python cache
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
-*.pyd
 
+# Virtual environments
 venv/
 .env/
+.venv/
 
+# Build / packaging
 build/
 dist/
 *.egg-info/
 
+# Logs
+*.log
+
+# IDEs
 .vscode/
 .idea/
 
-*.log
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing / coverage
+.coverage
+htmlcov/
+
+# PyInstaller
+*.spec
+
+# dotenv
+.env
