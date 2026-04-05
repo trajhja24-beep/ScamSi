@@ -12,6 +12,7 @@ class Screen:
         self.apps = [
             AppCreate("close.png", (0,0), self.game.main_world),
             AppCreate("play.png", (0,0), MiniGame(self.game, screen, enemy_count(self.game))),
+	    AppCreate("play.png", (0,0), MiniGameCrypto(self.game, screen, enemy_count(self.game))),
             AppCreate("amazon.jpg", (0,0), Shop(self.game, "a")),
         ]
         self.offset = 15
@@ -21,15 +22,8 @@ class Screen:
         if pygame.mouse.get_pressed()[0] == True:
             mouse_position = pygame.mouse.get_pos()
             for app in self.updated_app:
-<<<<<<< HEAD
                 if mouse_position[0] >= app.rect.x and mouse_position[0] <= app.rect.x + DESKTOPAPPSIZE and mouse_position[1] >= app.rect.y and mouse_position[1] <= app.rect.y + DESKTOPAPPSIZE:
                     self.game.current_state = app.act
-=======
-                for y in range(DESKTOPAPPSIZE):
-                    for x in range(DESKTOPAPPSIZE):
-                        if mouse_position[0] == x + app.rect.x and mouse_position[1] == y + app.rect.y:
-                            self.game.current_state = app.act
->>>>>>> 1a999ba5162325de6f5d226f3b8f25df3a277889
     def draw(self, screen):
         pygame.draw.rect(screen, (10, 10, 10), self.minigame_screen)
         for app in self.updated_app:

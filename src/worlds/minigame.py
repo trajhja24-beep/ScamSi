@@ -2,10 +2,11 @@ import pygame
 import settings
 import os
 from settings import *
-from main import BASE_DIR
 from entities.entities import Enemy
 from settings import PLAYER_SPEED
+import settings
 from entities.player import Player
+
 
 class MiniGame:
     def __init__(self, game, screen, enemy_count):
@@ -51,7 +52,7 @@ class MiniGame:
                 self.game.progress_bar.set(
                     self.game.progress_bar.progress - 5
                 )
-                settings.MONEY += 10
+                settings.MONEY += 10 * settings.MONEY_BOOST
                 self.game.current_state = self.game.main_world
             for enemy in self.enemys:
                 if self.player.colliderect(enemy.enemy):
@@ -59,7 +60,7 @@ class MiniGame:
                         self.game.progress_bar.progress + 10
                     )
 
-                    settings.MONEY -= 5
+                    settings.MONEY -= 5 
 
                     self.game.current_state = self.game.main_world
 
@@ -76,23 +77,27 @@ class MiniGame:
 
 class MiniGameCrypto:
     def __init__(self, game, screen, difficulty):
+
+        
         self.speed = PLAYER_SPEED
         self.camera = [0, 0]
         self.minigame_start = False
         self.game = game
         self.main_screen = screen
-
-        self.rect = pygame.Rect(((WIDTH - WIDTH / 2) / 2 ,(HEIGHT - HEIGHT / 2) / 2), (WIDTH / 2, HEIGHT / 2))
-        player_path = os.path.join(BASE_DIR, "assets", "player.png")
-        player_img = pygame.image.load(player_path).convert_alpha()
-        player_img = pygame.transform.scale(player_img, (50, 50))
-        self.player = Player(player_img, (WIDTH // 2, HEIGHT // 2), self.game.main_world)
-        self.player2 = pygame.Rect((settings.WIDTH - WIDTH / 2) / 2 + (WIDTH / 2) / 20, (HEIGHT - HEIGHT / 2) / 2 + HEIGHT / 2 - ((WIDTH / 2) / 20 + 10), (WIDTH / 2) / 20, (WIDTH / 2) / 20)
+        self.line = []
+        self.player = pygame.Rect(((WIDTH / 2, HEIGHT / 2)), ((WIDTH / 2) / 20, (WIDTH / 2) / 20))
+        self.line.append(self.player)
     def update(self, dt, screen):
         keys = pygame.key.get_pressed()
-        self.player.move_world(keys, self.camera, [])
+        self.player.x += 1
+        if dt % 2 == 0: 
+            self.player.y += 1
     def draw(self, main_screen):
-        pygame.draw.rect(self.main_screen, (10, 10, 10), self.rect)
-        self.player.draw(self.rect)
-        pygame.draw.rect(self.main_screen, RED, self.player2)
+        minigame_screen(main_screen)
+        for player in self.line:
+            pygame.draw.rect(main_screen, GREEN, player)
+        
+def minigame_screen(main_screen):
+    rect = pygame.Rect(((WIDTH - WIDTH / 2) / 2 ,(HEIGHT - HEIGHT / 2) / 2), (WIDTH / 2, HEIGHT / 2))
+    pygame.draw.rect(main_screen, (10, 10, 10), rect)
 

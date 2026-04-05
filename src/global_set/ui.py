@@ -43,6 +43,7 @@ class Inventory:
                     slot.free = False
                     slot.set_item(item)
                     break
+        
     def draw(self, screen):
         pygame.draw.rect(screen, (150,150,150, 0), self.background)
         for slot in self.slots:
@@ -52,6 +53,7 @@ class CreateSlot:
     def __init__(self, slot_number, x, y):
         self.slot_number = slot_number
         self.free = True
+        self.chosen = False
         self.slot = pygame.Rect(x + SLOTSIZE[1] * self.slot_number, y,SLOTSIZE[0], SLOTSIZE[1])
         self.image = None
         self.position = (self.slot.x, self.slot.y)
@@ -65,10 +67,29 @@ class CreateSlot:
         self.image = pygame.transform.scale(self.image,(SLOTSIZE[0], SLOTSIZE[1]))
         self.rect = self.image.get_rect(topleft=(self.position))
     def draw(self, screen):
-        pygame.draw.rect(screen, (200,200,200, 0), self.slot)
-        if self.image:
+        if self.chosen == False:
+            pygame.draw.rect(screen, (200,200,200, 1), self.slot)
+        else:
+            pygame.draw.rect(screen, (255,255,255, 1), self.slot)
+        if self.free == False:
             screen.blit(
                 self.image,
                 (self.rect.x, self.rect.y)
             )
+
+class SoundManager:
+    def __init__(self):
+        pygame.mixer.init()
+        self.sounds = {}
+
+    def load(self, name, path):
+        self.sounds[name] = pygame.mixer.Sound(path)
+
+    def play(self, name):
+        if name in self.sounds:
+            self.sounds[name].play()
+
+    def set_volume(self, name, volume):
+        if name in self.sounds:
+            self.sounds[name].set_volume(volume)
 

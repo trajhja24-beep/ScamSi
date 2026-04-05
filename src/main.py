@@ -11,6 +11,7 @@ from worlds.main_world import MainWorld
 
 
 pygame.init()
+pygame.mixer.init()
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
@@ -19,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 player_path = os.path.join(BASE_DIR, "assets", "player.png")
 player_img = pygame.image.load(player_path).convert_alpha()
-player_img = pygame.transform.scale(player_img, (50, 50))
+player_img = pygame.transform.scale(player_img, PLAYER_SIZE)
 
 
 progress_bar = ProgressBar(WIDTH - 250, HEIGHT - 40, 200, 20)
@@ -29,7 +30,7 @@ class Game:
         self.progress_bar = progress_bar
         self.inventory =Inventory(SLOTCOUNT, 0, 0, self)
         self.main_world = MainWorld(self)
-        self.player = Player(player_img, (WIDTH // 2, HEIGHT // 2), self.main_world)
+        self.player = Player(player_img, PLAYER_STARTING_POSITION, self.main_world)
         self.current_state = self.main_world
 
 game = Game()
