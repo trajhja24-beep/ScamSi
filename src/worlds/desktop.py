@@ -2,6 +2,8 @@ import pygame
 import os
 from settings import *
 from worlds.minigame import MiniGame
+from worlds.minigame import MiniGameCrypto
+from worlds.amazon import Shop
 import math
 
 class Screen:
@@ -9,11 +11,13 @@ class Screen:
         self.game = game
         self.minigame_screen = pygame.Rect(((WIDTH - WIDTH / 2) / 2 ,(HEIGHT - HEIGHT / 2) / 2), (WIDTH / 2, HEIGHT / 2))
         self.apps = [
-            AppCreate("bc.jpg", (0,0), self.game.main_world),
-            AppCreate("player.png", (0,0), MiniGame(self.game, screen, enemy_count(self.game))),
+            AppCreate("close.png", (0,0), self.game.main_world),
+            AppCreate("play.png", (0,0), MiniGame(self.game, screen, enemy_count(self.game))),
+	        AppCreate("play.png", (0,0), MiniGameCrypto(self.game, screen, enemy_count(self.game))),
+            AppCreate("amazon.jpg", (0,0), Shop(self.game, "a")),
         ]
         self.offset = 15
-        self.grid_size = 1
+        self.grid_size = 4
         self.updated_app = setAppsPosition(self.apps, self.offset, self.grid_size)
     def update(self, dt, screen):
         if pygame.mouse.get_pressed()[0] == True:
@@ -69,3 +73,4 @@ def enemy_count(game):
     if enemy_count == 0:
         enemy_count = 1
     return enemy_count
+

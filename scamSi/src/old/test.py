@@ -1,0 +1,226 @@
+import pygame
+import os
+import random
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+pygame.init()
+
+def show_hint():
+        hint_surface = font.render('Press E', False, (0, 255, 0))
+        screen.blit(hint_surface, (sx / 20, sy - font_size_medium * 2))
+
+sx, sy = 1280, 720
+screen = pygame.display.set_mode((sx, sy))
+sxm, sym = sx/2, sy/2
+minigame_screen = pygame.Rect(((sx - sxm) / 2 ,(sy - sym) / 2), (sxm, sym))
+
+pygame.display.set_caption("ScamSimulator")
+camera_x = 0
+camera_y = 0
+speed = 10
+
+running = True
+fps = 30
+clock = pygame.time.Clock()
+font_size_medium = 30
+font = pygame.font.SysFont('Comic Sans MS', font_size_medium)
+
+center_x = sxm / 2
+center_y = sym / 2
+
+def minigame_player_reset():
+    minigame_player = pygame.Rect(((sx - sxm / 20) / 3,(sy - sym / 20) / 1.5), (sxm / 20, sxm / 20))
+    return minigame_player
+def minigame_enemy_reset():
+    minigame_enemy = pygame.Rect(((sx - sxm / 20) / 2,(sy - sym / 20) / 2), (sxm / 20, sxm / 20))
+    return minigame_enemy
+minigame_player = minigame_player_reset()
+minigame_finish = pygame.Rect(((sx - sxm / 20) / 1.5,(sy - sym / 20) / 3), (sxm / 20, sxm / 20))
+minigame_enemy = minigame_enemy_reset()
+
+player_path = os.path.join(BASE_DIR, "player.png")
+player_img = pygame.image.load(player_path).convert_alpha()
+player_image = pygame.transform.scale(player_img, (50, 50))
+
+player_screen_rect = player_image.get_rect(center=(sx // 2, sy // 2))
+player_world_rect = player_image.get_rect()
+
+background_path = os.path.join(BASE_DIR, "bc.jpg")
+background = pygame.image.load(background_path).convert_alpha()
+background_image = pygame.transform.scale(background, (2000, 2000))
+
+object_path = os.path.join(BASE_DIR, "object.png")
+object_img = pygame.image.load(object_path).convert_alpha()
+object_image = pygame.transform.scale(object_img, (100, 50))
+
+object_rect = object_image.get_rect(topleft=(700, 400))
+collision_object_rect = object_rect.inflate(speed * 2, speed * 2)
+
+def base_progress_bar():
+    progress_bar = pygame.Rect(((sx / 7) * 6 - sx / 14, (sy / 10) * 9 - sy / 20), (sx / 7, sy / 10))
+    return progress_bar
+def progress_bar_progress_update(stress_progress):
+    progress_bar_progress = base_progress_bar()
+    if stress_progress > 100:
+        return progress_bar_progress
+    elif stress_progress < 0:
+        progress_bar_progress.width = 0
+        return progress_bar_progress
+    else:
+        max_widht = progress_bar_progress.width
+        progress_bar_progress.width = (max_widht / 100) * stress_progress
+        return progress_bar_progress
+progress_bar_border = base_progress_bar()
+
+
+
+stress_progress = 0
+move_interval = 0.01
+enemy_move_interval = 0.01
+time_since_last_move = 0
+time_since_last_enemy_move = 0
+game_state = "main"
+
+progress_bar_progress = progress_bar_progress_update(stress_progress)
+
+while running:
+    dt = clock.tick(fps) / 1000
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    if game_state == "main":
+        time_since_last_move += dt
+        keys = pygame.key.get_pressed()
+        
+        if time_since_last_move >= move_interval:
+            if keys[pygame.K_a]:
+                
+                camera_x -= speed
+            if keys[pygame.K_d]:
+                
+                camera_x += speed
+            if keys[pygame.K_w]:
+                
+                camera_y -= speed
+            if keys[pygame.K_s]:
+                
+                camera_y += speed
+            time_since_last_move = 0
+
+        player_world_rect.center = (
+            camera_x + sx // 2,
+            camera_y + sy // 2
+        )
+
+        if player_world_rect.colliderect(object_rect):
+            if keys[pygame.K_a]:
+                camera_x += speed
+            if keys[pygame.K_d]:
+                camera_x -= speed
+            if keys[pygame.K_w]:
+                camera_y += speed
+            if keys[pygame.K_s]:
+                camera_y -= speed
+        
+    if game_state == "minigame":
+        
+        time_since_last_move += dt
+        time_since_last_enemy_move += dt
+        keys = pygame.key.get_pressed()
+        minigame_speed = 10
+        minigame_enemy_speed = 11
+        if time_since_last_enemy_move >= enemy_move_interval:
+            
+            x_y = random.randint(1,2)
+            if x_y == 1:
+                if minigame_enemy.x >= minigame_player.x:
+                    move_direction = 1
+                else:
+                    move_direction = 2
+            else:
+                if minigame_enemy.y >= minigame_player.y:
+                    move_direction = 3
+                else:
+                    move_direction = 4
+
+            if move_direction == 1:
+                if minigame_enemy.left -minigame_enemy_speed >= (sx - sxm) / 2 + sxm / 20:
+                    minigame_enemy.x -=minigame_enemy_speed
+            if move_direction == 2:
+                if minigame_enemy.right -minigame_enemy_speed <= sxm + (sx - sxm) / 2 - sxm / 20:
+                    minigame_enemy.x +=minigame_enemy_speed
+            if move_direction == 3:
+                if minigame_enemy.top -minigame_enemy_speed >= (sy - sym) / 2 + sym / 20:
+                    minigame_enemy.y -=minigame_enemy_speed
+            if move_direction == 4:
+                if minigame_enemy.bottom -minigame_enemy_speed <= sym + (sy - sym) / 2 - sxm / 20:  
+                    minigame_enemy.y +=minigame_enemy_speed
+
+            enemy_move_interval = 0
+        if time_since_last_move >= move_interval:
+            if keys[pygame.K_a]:
+                if minigame_player.left - minigame_speed >= (sx - sxm) / 2 + sxm / 20:
+                    minigame_player.x -= minigame_speed
+            if keys[pygame.K_d]:
+                if minigame_player.right - minigame_speed <= sxm + (sx - sxm) / 2 - sxm / 20:
+                    minigame_player.x += minigame_speed
+            if keys[pygame.K_w]:
+                if minigame_player.top - minigame_speed >= (sy - sym) / 2 + sym / 20:
+                    minigame_player.y -= minigame_speed
+            if keys[pygame.K_s]:
+                if minigame_player.bottom - minigame_speed <= sym + (sy - sym) / 2 - sxm / 20:  
+                    minigame_player.y += minigame_speed
+            time_since_last_move = 0
+
+        if minigame_player.colliderect(minigame_finish):
+            minigame_player = minigame_player_reset() 
+            minigame_enemy = minigame_enemy_reset()
+            minigame_state = "win"
+            game_state = "main"
+            stress_progress -= 10
+            progress_bar_progress = progress_bar_progress_update(stress_progress)
+            print("win")
+        if minigame_player.colliderect(minigame_enemy):
+            minigame_player = minigame_player_reset()
+            minigame_enemy = minigame_enemy_reset()
+            minigame_state = "win"
+            game_state = "main"
+            stress_progress += 10
+            progress_bar_progress = progress_bar_progress_update(stress_progress)
+            print("lose")
+
+    if game_state == "main":
+
+        screen.fill((0, 0, 0))
+
+        screen.blit(background_image, (-camera_x, -camera_y))
+
+        screen.blit(
+            object_image,
+            (object_rect.x - camera_x, object_rect.y - camera_y)
+        )
+
+        screen.blit(player_image, player_screen_rect)
+        
+        colliding_with_objeect = player_world_rect.colliderect(collision_object_rect)
+        pygame.draw.rect(screen, (0, 0, 0), progress_bar_border)
+        pygame.draw.rect(screen, (255, 0, 0), progress_bar_progress)
+        if colliding_with_objeect:
+            show_hint()
+
+            if keys[pygame.K_e] and game_state == "main":
+                game_state = "minigame"
+                print("action")
+
+
+    if game_state == "minigame":
+        pygame.draw.rect(screen, (0, 0, 0), minigame_screen)
+        pygame.draw.rect(screen, (0, 255, 0), minigame_finish)
+        pygame.draw.rect(screen, (255, 0, 0), minigame_player)
+        pygame.draw.rect(screen, (0, 0, 255), minigame_enemy)
+
+    pygame.display.flip()
+
+pygame.quit()
