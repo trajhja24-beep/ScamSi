@@ -13,7 +13,7 @@ class Screen:
         self.apps = [
             AppCreate("close.png", (0,0), self.game.main_world),
             AppCreate("play.png", (0,0), MiniGame(self.game, screen, enemy_count(self.game))),
-	        AppCreate("play.png", (0,0), MiniGameCrypto(self.game, screen, enemy_count(self.game))),
+	        #AppCreate("play.png", (0,0), MiniGameCrypto(self.game, screen, enemy_count(self.game))),
             AppCreate("amazon.jpg", (0,0), Shop(self.game, "a")),
         ]
         self.offset = 15
