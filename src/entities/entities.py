@@ -41,21 +41,23 @@ class Police:
         self.rect = self.image.get_rect(center=self.start_pos)
         self.speed = PLAYER_SPEED - 1
     def update(self, target):
-        if random.choice([True, False]):
-            if self.rect.x < target[0]:
-                if self.rect.right + self.speed <= self.screen.width:
-                    self.rect.x += self.speed + random.randint(-2, 2)
+        if self.healt > 0:
+            if random.choice([True, False]):
+                if self.rect.x < target[0]:
+                    if self.rect.right + self.speed <= self.screen.width:
+                        self.rect.x += self.speed + random.randint(-2, 2)
+                else:
+                    self.rect.x -= self.speed + random.randint(-2, 2)
             else:
-                self.rect.x -= self.speed + random.randint(-2, 2)
-        else:
-            if self.rect.y < target[1]:
-                self.rect.y += self.speed + random.randint(-2, 2)
-            else:
-                self.rect.y -= self.speed + random.randint(-2, 2)
+                if self.rect.y < target[1]:
+                    self.rect.y += self.speed + random.randint(-2, 2)
+                else:
+                    self.rect.y -= self.speed + random.randint(-2, 2)
     def draw(self, screen, camera):
-        screen.blit(
-            self.image,
-            (self.rect.x - camera[0], self.rect.y - camera[1])
-        )
+        if self.healt > 0:
+            screen.blit(
+                self.image,
+                (self.rect.x - camera[0], self.rect.y - camera[1])
+            )
         
         

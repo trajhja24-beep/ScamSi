@@ -38,7 +38,7 @@ class MainWorld:
         self.police_spawn_delay = 5
     def update(self, dt, screen):
         self.police_spawn_timer += dt
-        if self.game.progress_bar.progress >= 100 and len(self.police) < 3 and self.police_spawn_timer >= self.police_spawn_delay:
+        if self.game.progress_bar.progress >= 0 and len(self.police) < 3 and self.police_spawn_timer >= self.police_spawn_delay:
             self.police.append(Police(self.BASE_DIR, screen))
             self.police_spawn_timer = 0.0
 
@@ -73,14 +73,13 @@ class MainWorld:
                             item_type = slot.item.product[6]
 
                             if item_type in ITEM_CLASSES:
-                                print("yes")
+                                
                                 item.logic = ITEM_CLASSES[item_type]()
                             else:
-                                print("no")
+                                
                                 item.logic = None
 
                         except IndexError:
-                            print("err")
                             item.logic = None
 
             if not slot.free and slot.chosen:
@@ -100,7 +99,7 @@ class MainWorld:
             if not slot.free and slot.chosen:
                 logic = getattr(slot.item, "logic", None)
                 if logic:
-                    logic.update()
+                    logic.update(dt ,self.camera,slot ,self.police)
         # for slot in range(len(self.game.inventory.slots)):
         #     slot += 1
         #     key = getattr(pygame, f"K_{slot}")

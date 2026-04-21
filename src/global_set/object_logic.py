@@ -6,14 +6,30 @@ class Gun:
         self.target = pygame.image.load("assets/target.png").convert_alpha()
         self.target = pygame.transform.scale(self.target, PLAYER_SIZE)
         self.target_rect = self.target.get_rect()
-    def update(self, police=None):
+        self.last_fire = 0
+        self.delay = 1
+    def update(self, dt, camera, slot=None, police=[]):
+        self.last_fire += dt
         mouse_pos = pygame.mouse.get_pos()
         self.target_rect.center = mouse_pos
         mouse_buttons = pygame.mouse.get_pressed()
-        if mouse_buttons[0]:
-            print("Gun updating")
+        og_color = slot.chosen_color
+        if not self.last_fire >= self.delay:
+            slot.chosen_color = (255, 0,0,1)
+        else:
+            slot.chosen_color = (255,255,255, 1)
+        if mouse_buttons[0] and self.last_fire >= self.delay:
+            self.last_fire = 0.0
+            print("fire")
+            world_center = self.target_rect.copy()
+            world_center.centerx += camera[0]
+            world_center.centery += camera[1]
+            for p in police:
+                if p.rect.colliderect(world_center):
+                    p.healt -= 20
+                    break
 
-        return police
+        
 
     def draw(self, screen):
         screen.blit(self.target, self.target_rect)

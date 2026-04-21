@@ -57,6 +57,7 @@ class CreateSlot:
         self.slot = pygame.Rect(x + SLOTSIZE[1] * self.slot_number, y,SLOTSIZE[0], SLOTSIZE[1])
         self.image = None
         self.position = (self.slot.x, self.slot.y)
+        self.chosen_color = (255,255,255, 1)
     def set_item(self, item):
         self.item = item
         base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -70,7 +71,7 @@ class CreateSlot:
         if self.chosen == False:
             pygame.draw.rect(screen, (200,200,200, 1), self.slot)
         else:
-            pygame.draw.rect(screen, (255,255,255, 1), self.slot)
+            pygame.draw.rect(screen, self.chosen_color, self.slot)
         if self.free == False:
             screen.blit(
                 self.image,
