@@ -14,6 +14,7 @@ class Player:
         self.curentItem = False
 
     def move_world(self, keys, camera, objects):
+        self.camera = camera
         dx = dy = 0
         if keys[pygame.K_a]:
             dx -= 0.5 * self.speed
@@ -54,3 +55,10 @@ class Player:
         screen.blit(self.image, self.rect)
         if not self.curentItem == False:
             screen.blit(self.itemimage, self.itemRect)
+
+    def get_world_position(self):
+        if not hasattr(self, "camera"):
+            return self.rect.center
+        world_x = self.rect.x + self.camera[0]
+        world_y = self.rect.y + self.camera[1]
+        return [world_x, world_y]

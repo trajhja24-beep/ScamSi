@@ -1,5 +1,6 @@
 import pygame
 import os
+import random
 
 class WorldObject:
     def __init__(self, image_path, position, size):
@@ -12,12 +13,10 @@ class WorldObject:
 
         self.image = pygame.transform.scale(self.image, size)
         self.rect = self.image.get_rect(topleft=position)
-
     def draw(self, screen, camera):
         screen.blit(
             self.image,
             (self.rect.x - camera[0], self.rect.y - camera[1])
         )
-
     def is_colliding(self, player, camera):
         return self.rect.colliderect(player.rect.move(camera))

@@ -15,6 +15,7 @@ class Screen:
             AppCreate("play.png", (0,0), MiniGame(self.game, screen, enemy_count(self.game))),
 	        AppCreate("play.png", (0,0), MiniGameCrypto(self.game, screen, enemy_count(self.game))),
             AppCreate("amazon.jpg", (0,0), Shop(self.game, "a")),
+            AppCreate("amazon.jpg", (0,0), Shop(self.game, "g"))
         ]
         self.offset = 15
         self.grid_size = 4

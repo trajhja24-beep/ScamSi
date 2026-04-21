@@ -31,5 +31,17 @@ PRODUCTS =[
             1,  #money times
             1  #stress factor
         ]
+    ],
+    [
+        "glock17.png", #pic name.koncovka
+        "Glock 17",  #Name
+        0,  #price
+        "0",    #level from unloced
+        ["g"],   #where can I buy it
+        [
+            1,  #money times
+            1  #stress factor
+        ],
+        "gun"
     ]
 ]

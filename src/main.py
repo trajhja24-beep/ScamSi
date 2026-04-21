@@ -29,7 +29,7 @@ class Game:
     def __init__(self):
         self.progress_bar = progress_bar
         self.inventory =Inventory(SLOTCOUNT, 0, 0, self)
-        self.main_world = MainWorld(self)
+        self.main_world = MainWorld(self, BASE_DIR)
         self.player = Player(player_img, PLAYER_STARTING_POSITION, self.main_world)
         self.current_state = self.main_world
 

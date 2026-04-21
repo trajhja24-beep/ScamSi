@@ -16,11 +16,16 @@ class Shop:
             self.product.append(productCreate(product))
         self.offset = 15
         self.product = re_pos_prod(self.product, self.offset)
+        self.exit = pygame.Rect(((WIDTH - WIDTH / 2) / 2  + WIDTH / 2 - HEIGHT / 20,(HEIGHT - HEIGHT / 2) / 2 - HEIGHT / 20), (HEIGHT / 10, HEIGHT / 10))
+        self.exitText = RenderText(self.exit.x,self.exit.y, (225,225,225), "Exit", 1)
         
 
     def update(self, dt, screen):
          if pygame.mouse.get_pressed()[0] == True:
             mouse_position = pygame.mouse.get_pos()
+            if mouse_position[0] >= self.exit.x and mouse_position[0] <= self.exit.x + HEIGHT / 10 and mouse_position[1] >= self.exit.y and mouse_position[1] <= self.exit.y + HEIGHT / 10:
+                settings.MONEY -= 100
+                self.game.current_state = self.game.main_world
             for product in self.product:
                 if mouse_position[0] >= product.buy_button.x and mouse_position[0] <= product.buy_button.x + PRODUCTBUYSIZE[0] and mouse_position[1] >= product.buy_button.y and mouse_position[1] <= product.buy_button.y + PRODUCTBUYSIZE[1]:
                     if settings.MONEY >= product.product[2]:
@@ -32,6 +37,9 @@ class Shop:
                         print("no money")
     def draw(self, screen):
         pygame.draw.rect(screen, (100, 100, 100), self.minigame_screen)
+        pygame.draw.rect(screen, (255, 0, 0), self.exit)
+        self.exitText.draw(screen)
+
         for prod in self.product:
             prod.draw(screen)
 
