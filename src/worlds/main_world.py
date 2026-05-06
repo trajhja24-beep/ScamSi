@@ -14,6 +14,11 @@ ITEM_CLASSES = {
     "gun": Gun
 }
 
+OBJECT_CLASSES = {
+    "pc": Screen,
+    "" : Shop
+}
+
 class MainWorld:
     def __init__(self, game, BASE_DIR):
         self.BASE_DIR = BASE_DIR
@@ -26,6 +31,12 @@ class MainWorld:
              WorldObject(
                 "object.png",
                 (700, 400),
+                (100, 50),
+                "pc"
+            ),
+            WorldObject(
+                "object.png",
+                (1000, 400),
                 (100, 50)
             )
         ]
@@ -38,7 +49,7 @@ class MainWorld:
         self.police_spawn_delay = 5
     def update(self, dt, screen):
         self.police_spawn_timer += dt
-        if self.game.progress_bar.progress >= 0 and len(self.police) < 3 and self.police_spawn_timer >= self.police_spawn_delay:
+        if self.game.progress_bar.progress >= 100 and len(self.police) < 3 and self.police_spawn_timer >= self.police_spawn_delay:
             self.police.append(Police(self.BASE_DIR, screen))
             self.police_spawn_timer = 0.0
 
@@ -53,7 +64,15 @@ class MainWorld:
         if keys[pygame.K_e]:
             for object in self.objects:
                 if object.is_colliding(self.game.player, self.camera):
-                    self.game.current_state = Screen(self.game, screen) #MiniGame(self.game, screen, self.enemy_count)
+                    
+                    
+                    if not object.logic == None:
+
+                        if object.logic in OBJECT_CLASSES:
+                            
+                            object.logic = OBJECT_CLASSES[object.logic](self.game, screen)
+                        self.game.current_state = object.logic                     #Screen(self.game, screen) #MiniGame(self.game, screen, self.enemy_count)
+                    
         for slot_index in range(len(self.game.inventory.slots)):
             key = getattr(pygame, f"K_{slot_index + 1}")
             slot = self.game.inventory.slots[slot_index]

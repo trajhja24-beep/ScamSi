@@ -16,6 +16,7 @@ class Player:
     def move_world(self, keys, camera, objects):
         self.camera = camera
         dx = dy = 0
+        allow_move = True
         if keys[pygame.K_a]:
             dx -= 0.5 * self.speed
         if keys[pygame.K_d]:
@@ -30,15 +31,17 @@ class Player:
             camera[1] + dy
         ]
         for object in objects:
-            if not object.is_colliding(self.main_word.game.player, new_camera):
-                if keys[pygame.K_a]:
-                    camera[0] -= self.speed
-                if keys[pygame.K_d]:
-                    camera[0] += self.speed
-                if keys[pygame.K_w]:
-                    camera[1] -= self.speed
-                if keys[pygame.K_s]:
-                    camera[1] += self.speed
+            if object.is_colliding(self.main_word.game.player, new_camera):
+                allow_move = False
+        if allow_move == True:
+            if keys[pygame.K_a]:
+                camera[0] -= self.speed
+            if keys[pygame.K_d]:
+                camera[0] += self.speed
+            if keys[pygame.K_w]:
+                camera[1] -= self.speed
+            if keys[pygame.K_s]:
+                camera[1] += self.speed
     def hold_item(self, item):
         if item.free == False:
             self.curentItem = item
