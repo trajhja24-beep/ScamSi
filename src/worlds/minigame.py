@@ -20,6 +20,7 @@ class MiniGame:
         self.enemys = []
         for x in range(enemy_count):
             self.enemys.append(Enemy(pygame.Rect((WIDTH / 2), (HEIGHT / 2), (WIDTH / 2) / 20, (WIDTH / 2) / 20), self.main_screen))
+        print("minigame Run")
 
     def update(self, dt, screen):
         keys = pygame.key.get_pressed()

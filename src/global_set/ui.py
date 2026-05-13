@@ -2,6 +2,7 @@ import pygame
 import os
 from settings import FONT
 from settings import SLOTSIZE
+from settings import LEVEL
 
 class ProgressBar:
     def __init__(self, x, y, width, height):
@@ -16,6 +17,27 @@ class ProgressBar:
         fill_rect.width = fill_width
 
         pygame.draw.rect(screen, (255, 0, 0), fill_rect)
+        pygame.draw.rect(screen, (255, 255, 255), self.border_rect, 2)
+class ExpBar:
+    def __init__(self, x, y, width, height):
+        self.border_rect = pygame.Rect(x, y, width, height)
+        self.curent_level = LEVEL
+        self.progress = 0
+    def set(self, value):
+        self.progress += value
+        #while self.progress >= 100 + 10 * self.curent_level:
+        if self.progress >= 100 + 10 * self.curent_level: 
+            self.curent_level += 1
+            remainExp = self.progress - 100 + 10 * self.curent_level
+            self.progress = 0
+            self.progress += remainExp
+
+    def draw(self, screen):
+        fill_width = int(self.border_rect.width * (self.progress / 100))
+        fill_rect = self.border_rect.copy()
+        fill_rect.width = fill_width
+
+        pygame.draw.rect(screen, (255, 255, 0), fill_rect)
         pygame.draw.rect(screen, (255, 255, 255), self.border_rect, 2)
 class RenderText:
     def __init__(self, x, y, color, msg, size):

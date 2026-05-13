@@ -1,6 +1,7 @@
 from worlds.object_create import WorldObject
 from worlds.minigame import MiniGame
 from worlds.desktop import Screen
+from worlds.amazon import Shop
 from settings import *
 from global_set.ui import RenderText
 from global_set.object_logic import Gun
@@ -16,7 +17,7 @@ ITEM_CLASSES = {
 
 OBJECT_CLASSES = {
     "pc": Screen,
-    "" : Shop
+    "shop" : Shop
 }
 
 class MainWorld:
@@ -172,8 +173,10 @@ class MainWorld:
 
         
         self.game.progress_bar.draw(screen)
+        self.game.exp_bar.draw(screen)
         self.game.inventory.draw(screen)
         RenderText(WIDTH - 200, HEIGHT - 100, GREEN, "$" + str(settings.MONEY), 1).draw(screen)
+        RenderText(WIDTH - 250, HEIGHT - 100, (255,255,0), str(self.game.exp_bar.curent_level) , 1).draw(screen)
         for object in self.objects:
             if object.is_colliding(self.game.player, self.camera):
                 self.hintText.draw(screen)

@@ -6,6 +6,7 @@ from settings import *
 from entities.player import Player
 from global_set.ui import ProgressBar
 from global_set.ui import Inventory
+from global_set.ui import ExpBar
 from worlds.main_world import MainWorld
 
 
@@ -24,10 +25,12 @@ player_img = pygame.transform.scale(player_img, PLAYER_SIZE)
 
 
 progress_bar = ProgressBar(WIDTH - 250, HEIGHT - 40, 200, 20)
+expBar = ExpBar(WIDTH - 250, HEIGHT - 70, 200, 20)
 
 class Game:
     def __init__(self):
         self.progress_bar = progress_bar
+        self.exp_bar = expBar
         self.inventory =Inventory(SLOTCOUNT, 0, 0, self)
         self.main_world = MainWorld(self, BASE_DIR)
         self.player = Player(player_img, PLAYER_STARTING_POSITION, self.main_world)
@@ -42,7 +45,6 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
     game.current_state.update(dt, screen)
     game.current_state.draw(screen)
 
