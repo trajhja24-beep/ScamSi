@@ -20,7 +20,7 @@ classifiers = [
 
 
 [project.scripts]
-scamSi = "scamSi.src.main:main"
+scamSi = "scamSi.main:main"
 
 
 [build-system]
@@ -28,4 +28,5 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
+package-dir = {"" = "src"}
