@@ -1,2 +1,0 @@
-[console_scripts]
-scamSi = src.scamSi.main:main
