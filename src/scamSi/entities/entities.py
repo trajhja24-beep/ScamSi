@@ -19,7 +19,6 @@ class Enemy:
         """bohyp nepritele k danemu cili"""
         if random.choice([True, False]):
             if self.enemy.x < target.x:
-                if self.enemy.right + self.speed <= self.screen.width:
                     self.enemy.x += self.speed + random.randint(-2, 2)
             else:
                 self.enemy.x -= self.speed + random.randint(-2, 2)
@@ -49,7 +48,6 @@ class Police:
         if self.healt > 0:
             if random.choice([True, False]):
                 if self.rect.x < target[0]:
-                    if self.rect.right + self.speed <= self.screen.width:
                         self.rect.x += self.speed + random.randint(-2, 2)
                 else:
                     self.rect.x -= self.speed + random.randint(-2, 2)

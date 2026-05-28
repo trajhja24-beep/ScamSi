@@ -24,6 +24,9 @@ class ProgressBar:
 
         pygame.draw.rect(screen, (255, 0, 0), fill_rect)
         pygame.draw.rect(screen, (255, 255, 255), self.border_rect, 2)
+
+
+
 class ExpBar:
     def __init__(self, x: int, y: int, width: int, height: int) -> None:
         """basic definice progress baru na levely a exp"""
@@ -34,20 +37,26 @@ class ExpBar:
         """nastaveni pokroku progres baru na exp"""
         self.progress += value
         #while self.progress >= 100 + 10 * self.curent_level:
-        if self.progress >= 100 + 10 * self.curent_level: 
+        # print(100 + 10 * self.curent_level)
+        # text = "added " + str(value) + "_curent level" + str(self.progress)
+        # print(text)
+        if self.progress >= 100 + 10 * self.curent_level:
+            #print("add level")
             self.curent_level += 1
-            remainExp = self.progress - 100 + 10 * self.curent_level
             self.progress = 0
-            self.progress += remainExp
 
     def draw(self, screen: pygame.Surface) -> None:
         """vykresleni samotneho progressbaru"""
-        fill_width = int(self.border_rect.width * (self.progress / 100))
+        fill_width = int(self.border_rect.width * (self.progress / (100 + 10 * self.curent_level)))
         fill_rect = self.border_rect.copy()
         fill_rect.width = fill_width
 
         pygame.draw.rect(screen, (255, 255, 0), fill_rect)
         pygame.draw.rect(screen, (255, 255, 255), self.border_rect, 2)
+
+
+
+
 class RenderText:
     def __init__(self, x: int, y: int, color: tuple[int, int, int], msg: str, size: int) -> None:
         """funcke pro renderovani textu nastaveni zakladnu barva velikos co kde"""

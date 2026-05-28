@@ -6,7 +6,7 @@ from global_set.products_info import PRODUCTS
 from settings import *
 
 class Shop:
-    def __init__(self, game: "Game", type: str) -> None:
+    def __init__(self, game: "Game", type: str = "a") -> None:
         """zakladni definice ui shopu a nastaveni co se tam bude prodavat"""
         self.type = type
         self.game = game
@@ -44,7 +44,8 @@ class Shop:
         self.exitText.draw(screen)
 
         for prod in self.product:
-            prod.draw(screen)
+            if int(self.game.exp_bar.curent_level) >= prod.product[3]:
+                prod.draw(screen)
 
 class productCreate:
     def __init__(self, product: list) -> None:

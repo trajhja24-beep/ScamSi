@@ -60,6 +60,9 @@ class MiniGame:
                 self.game.progress_bar.set(
                     self.game.progress_bar.progress - 5
                 )
+                self.game.exp_bar.set(
+                    40
+                )
                 settings.MONEY += 10 * settings.MONEY_BOOST
                 self.game.current_state = self.game.main_world
             for enemy in self.enemys:
@@ -67,6 +70,7 @@ class MiniGame:
                     self.game.progress_bar.set(
                         self.game.progress_bar.progress + 10
                     )
+                    
 
                     settings.MONEY -= 5 
 
@@ -74,11 +78,11 @@ class MiniGame:
 
     def draw(self, main_screen: pygame.Surface) -> None:
         """vykresleni"""
-        pygame.draw.rect(self.main_screen, (10, 10, 10), self.rect)
-        pygame.draw.rect(self.main_screen, GREEN, self.finish)
-        pygame.draw.rect(self.main_screen, RED, self.player)
+        pygame.draw.rect(main_screen, (10, 10, 10), self.rect)
+        pygame.draw.rect(main_screen, GREEN, self.finish)
+        pygame.draw.rect(main_screen, RED, self.player)
         for enemy in self.enemys:
-            enemy.draw(self.main_screen)
+            enemy.draw(main_screen)
 
 
 

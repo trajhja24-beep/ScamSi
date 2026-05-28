@@ -7,6 +7,7 @@ from global_set.ui import RenderText
 from global_set.object_logic import Gun
 from entities.entities import Police
 from pathlib import Path
+from worlds.menu import menu
 
 import pygame
 import settings
@@ -40,7 +41,8 @@ class MainWorld:
             WorldObject(
                 "object.png",
                 (1000, 400),
-                (100, 50)
+                (100, 50),
+                "shop"
             )
         ]
         self.background = WorldObject(
@@ -69,6 +71,8 @@ class MainWorld:
         self.police = [p for p in self.police if p.healt > 0]
         for police in self.police:
             police.update(player_pos)
+            if police.rect.colliderect(self.game.player.rect.move(self.camera)):
+                self.game.current_state = menu(self.game, self.BASE_DIR)
         keys = pygame.key.get_pressed()
         self.game.player.move_world(keys, self.camera, self.objects)
         
@@ -82,7 +86,7 @@ class MainWorld:
 
                         if object.logic in OBJECT_CLASSES:
                             
-                            object.logic = OBJECT_CLASSES[object.logic](self.game, screen)
+                            object.logic = OBJECT_CLASSES[object.logic](self.game, "a")
                         self.game.current_state = object.logic                     #Screen(self.game, screen) #MiniGame(self.game, screen, self.enemy_count)
                     
         for slot_index in range(len(self.game.inventory.slots)):
@@ -105,7 +109,7 @@ class MainWorld:
 
                             if item_type in ITEM_CLASSES:
                                 
-                                item.logic = ITEM_CLASSES[item_type]()
+                                item.logic = ITEM_CLASSES[item_type](self.BASE_DIR)
                             else:
                                 
                                 item.logic = None
@@ -131,6 +135,11 @@ class MainWorld:
                 logic = getattr(slot.item, "logic", None)
                 if logic:
                     logic.update(dt ,self.camera,slot ,self.police)
+
+
+
+            if keys[pygame.K_ESCAPE]:
+                self.game.current_state = menu(self.game, self.BASE_DIR, self)
         # for slot in range(len(self.game.inventory.slots)):
         #     slot += 1
         #     key = getattr(pygame, f"K_{slot}")

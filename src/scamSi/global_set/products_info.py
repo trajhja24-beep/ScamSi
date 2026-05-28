@@ -16,7 +16,7 @@ PRODUCTS =[
         "blackMonster.png", #pic name.koncovka
         "Goth girl PISS",  #Name
         150,  #price
-        "0",    #level from unloced
+        1,    #level from unloced
         ["a"],   #where can I buy it
         [
             1,  #money times
@@ -27,7 +27,7 @@ PRODUCTS =[
         "femboyMilk.png", #pic name.koncovka
         "Femboy Milk",  #Name
         200,  #price
-        "0",    #level from unloced
+        2,    #level from unloced
         ["a"],   #where can I buy it
         [
             1,  #money times
@@ -38,7 +38,7 @@ PRODUCTS =[
         "glock17.png", #pic name.koncovka
         "Glock 17",  #Name
         0,  #price
-        "0",    #level from unloced
+        0,    #level from unloced
         ["g"],   #where can I buy it
         [
             1,  #money times

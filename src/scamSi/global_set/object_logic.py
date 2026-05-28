@@ -1,10 +1,12 @@
 import pygame
 from settings import PLAYER_SIZE
+import os
 
 class Gun:
-    def __init__(self) -> None:
+    def __init__(self, BASE_DIR) -> None:
         """nacteni vsech potrebnych assetu pro spravne vykreslovani a funkcnost zbrane"""
-        self.target = pygame.image.load("assets/target.png").convert_alpha()
+        target_path = os.path.join(BASE_DIR, "assets", "target.png")
+        self.target = pygame.image.load(target_path).convert_alpha()
         self.target = pygame.transform.scale(self.target, PLAYER_SIZE)
         self.target_rect = self.target.get_rect()
         self.last_fire = 0

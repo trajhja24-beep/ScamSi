@@ -8,6 +8,7 @@ from settings import *
 from entities.player import Player
 from global_set.ui import ProgressBar, Inventory, ExpBar
 from worlds.main_world import MainWorld
+from worlds.menu import menu
 
 
 class Game:
@@ -18,12 +19,14 @@ class Game:
 
         self.main_world = MainWorld(self, base_dir)
 
+        self.menu = menu(self, base_dir, self.main_world)
+
         player_path = os.path.join(base_dir, "assets", "player.png")
         player_img = pygame.image.load(player_path).convert_alpha()
         player_img = pygame.transform.scale(player_img, PLAYER_SIZE)
 
         self.player = Player(player_img, PLAYER_STARTING_POSITION, self.main_world)
-        self.current_state = self.main_world
+        self.current_state = self.menu
 
 
 def main() -> None:
