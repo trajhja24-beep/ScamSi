@@ -6,6 +6,8 @@ from entities.entities import Enemy
 from settings import PLAYER_SPEED
 import settings
 from entities.player import Player
+import random
+from global_set.ui import RenderText
 
 
 class MiniGame:
@@ -21,7 +23,7 @@ class MiniGame:
         self.enemys = []
         for x in range(enemy_count):
             self.enemys.append(Enemy(pygame.Rect((WIDTH / 2), (HEIGHT / 2), (WIDTH / 2) / 20, (WIDTH / 2) / 20), self.main_screen))
-        print("minigame Run")
+        #print("minigame Run")
 
     def update(self, dt: float, screen: pygame.Surface) -> None:
         """
@@ -90,26 +92,120 @@ class MiniGame:
 
 class MiniGameCrypto:
     def __init__(self, game, screen, difficulty):
-
-        
-        self.speed = PLAYER_SPEED
-        self.camera = [0, 0]
-        self.minigame_start = False
         self.game = game
-        self.main_screen = screen
-        self.line = []
-        self.player = pygame.Rect(((WIDTH / 2, HEIGHT / 2)), ((WIDTH / 2) / 20, (WIDTH / 2) / 20))
-        self.line.append(self.player)
+        self.screen = screen
+
+        self.score = 100
+
+        self.price = HEIGHT // 2
+        self.points = []
+
+        self.current_number = random.randint(1, 3)
+
+        self.timer = 0
+
+        self.difficulty = max(1, min(4, difficulty))
+
+        self.time_limit = {
+            1: 3.0,
+            2: 2.0,
+            3: 1.2,
+            4: 0.8
+        }[self.difficulty]
+
+        self.speed = 120
+        self.trend = 0
+
+        self.finished = False
+        self.win = False
+
+        self.font = pygame.font.SysFont(None, 50)
+
+        self.spacing = 8
+
+    def reset_number(self):
+        self.current_number = random.randint(1, 3)
+        self.timer = 0
+        self.trend = random.choice([-1, 1]) * random.uniform(20, 60)
+
+    def check_answer(self, value):
+        if self.finished:
+            return
+
+        if value == self.current_number:
+            self.score += 10
+            self.trend += 25
+            self.price -= 10
+        else:
+            self.score -= 10
+            self.trend -= 25
+            self.price += 10
+
+        self.reset_number()
+
     def update(self, dt, screen):
+        if self.finished:
+            return
+
         keys = pygame.key.get_pressed()
-        self.player.x += 1
-        if dt % 2 == 0: 
-            self.player.y += 1
-    def draw(self, main_screen):
-        minigame_screen(main_screen)
-        for player in self.line:
-            pygame.draw.rect(main_screen, GREEN, player)
-        
+
+        self.timer += dt
+
+        if self.timer >= self.time_limit:
+            self.score -= 10
+            self.price += 10
+            self.reset_number()
+
+        if keys[pygame.K_1]:
+            self.check_answer(1)
+        elif keys[pygame.K_2]:
+            self.check_answer(2)
+        elif keys[pygame.K_3]:
+            self.check_answer(3)
+
+        noise = random.uniform(-1, 1) * self.speed * dt
+        self.price += self.trend * dt + noise
+
+        self.price = max(100, min(HEIGHT - 100, self.price))
+
+        self.points.append(self.price)
+
+        max_points = WIDTH // self.spacing
+        if len(self.points) > max_points:
+            self.points = self.points[-max_points:]
+
+        if self.score <= 0:
+            self.finished = True
+            self.win = False
+
+        if self.score >= 200:
+            self.finished = True
+            self.win = True
+
+    def draw(self, screen):
+
+        mid_x = WIDTH // 2
+        mid_y = HEIGHT // 2
+
+        if len(self.points) > 1:
+            for i in range(1, len(self.points)):
+                x1 = mid_x + (i - len(self.points)) * self.spacing
+                x2 = mid_x + (i - len(self.points) + 1) * self.spacing
+
+                y1 = self.points[i - 1]
+                y2 = self.points[i]
+
+                pygame.draw.line(screen, (0, 255, 0), (x1, y1), (x2, y2), 2)
+
+        pygame.draw.line(screen, (80, 80, 80), (0, mid_y), (WIDTH, mid_y), 1)
+
+        text = self.font.render(str(self.current_number), True, (255, 255, 255))
+        screen.blit(text, (50, 50))
+
+        if self.finished:
+            msg = "YOU WIN" if self.win else "YOU LOSE"
+            end_text = self.font.render(msg, True, (255, 0, 0))
+            screen.blit(end_text, (mid_x - 100, mid_y))
 def minigame_screen(main_screen):
     rect = pygame.Rect(((WIDTH - WIDTH / 2) / 2 ,(HEIGHT - HEIGHT / 2) / 2), (WIDTH / 2, HEIGHT / 2))
     pygame.draw.rect(main_screen, (10, 10, 10), rect)

@@ -18,10 +18,9 @@ class menu:
 
         self.minigame_screen = pygame.Rect((0,0), (WIDTH, HEIGHT))
 
-        self.title_text = RenderText(0,0,(225,225,225),"ScamSi", 1) 
+        self.title_text = RenderText(10,10,(225,225,225),"ScamSi", 1) 
 
-        self.play_text = RenderText(0,0,(225,225,225),"plaz", 1)
-        self.play_text.rect.y += 100
+        self.play_text = RenderText(10,100,(225,225,225),"plaz", 1)
     def update(self, dt: float, screen: pygame.Surface)  -> None:
         """funkcnost tlacitek a presmerovani"""
         mouse_position = pygame.mouse.get_pos()

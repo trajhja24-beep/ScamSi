@@ -59,14 +59,31 @@ class ExpBar:
 
 class RenderText:
     def __init__(self, x: int, y: int, color: tuple[int, int, int], msg: str, size: int) -> None:
-        """funcke pro renderovani textu nastaveni zakladnu barva velikos co kde"""
+        """text rendering class (dynamic message support)"""
+
         self.font = pygame.font.SysFont(None, FONT * size)
-        self.hint_surface = self.font.render(msg, False, color)
+
+        self.msg = msg
+        self.color = color
+
+        self.hint_surface = self.font.render(self.msg, False, self.color)
+
         self.rect = self.hint_surface.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+    def set_text(self, new_msg: str) -> None:
+        """change displayed text"""
+        self.msg = new_msg
+        self.hint_surface = self.font.render(self.msg, False, self.color)
+
+    def set_color(self, color: tuple[int, int, int]) -> None:
+        """change text color"""
+        self.color = color
+        self.hint_surface = self.font.render(self.msg, False, self.color)
+
     def draw(self, screen: pygame.Surface) -> None:
-        """vykresleni textu"""
+        """render text on screen"""
         screen.blit(self.hint_surface, self.rect)
 class Inventory:
     def __init__(self, slot_count: int, x: int, y: int, game) -> None:

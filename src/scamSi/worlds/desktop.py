@@ -5,6 +5,7 @@ from worlds.minigame import MiniGame
 from worlds.minigame import MiniGameCrypto
 from worlds.amazon import Shop
 import math
+import copy
 
 class Screen:
     def __init__(self, game: "Game", screen: pygame.Surface) -> None:
@@ -12,11 +13,11 @@ class Screen:
         self.game = game
         self.minigame_screen = pygame.Rect(((WIDTH - WIDTH / 2) / 2 ,(HEIGHT - HEIGHT / 2) / 2), (WIDTH / 2, HEIGHT / 2))
         self.apps = [
-            AppCreate("close.png", (0,0), self.game.main_world),
-            AppCreate("play.png", (0,0), MiniGame(self.game, screen, enemy_count(self.game))),
-	        AppCreate("play.png", (0,0), MiniGameCrypto(self.game, screen, enemy_count(self.game))),
-            AppCreate("amazon.jpg", (0,0), Shop(self.game, "a")),
-            AppCreate("amazon.jpg", (0,0), Shop(self.game, "g"))
+            AppCreate("close.png", (0,0), lambda: self.game.main_world),
+            AppCreate("play.png", (0,0), lambda: MiniGame(self.game, screen, enemy_count(self.game))),
+	        # AppCreate("play.png", (0,0), lambda: MiniGameCrypto(self.game, screen, enemy_count(self.game))),
+            AppCreate("amazon.jpg", (0,0), lambda: Shop(self.game, "a")),
+            AppCreate("amazon.jpg", (0,0), lambda: Shop(self.game, "g"))
         ]
         self.offset = 15
         self.grid_size = 4
@@ -29,7 +30,7 @@ class Screen:
                 for y in range(DESKTOPAPPSIZE):
                     for x in range(DESKTOPAPPSIZE):
                         if mouse_position[0] == x + app.rect.x and mouse_position[1] == y + app.rect.y:
-                            self.game.current_state = app.act
+                            self.game.current_state = app.appRun()
     def draw(self, screen: pygame.Surface) -> None:
         """vykresleni"""
         pygame.draw.rect(screen, (10, 10, 10), self.minigame_screen)
@@ -57,6 +58,9 @@ class AppCreate:
             self.image,
             (self.rect.x, self.rect.y)
         )
+    def appRun(self):
+        """spusteni aplikace snad"""
+        return self.act()
 
 def setAppsPosition(apps: list, offset: int, grid_size: int) -> list:
     """offsetnuti aplikaci tak aby byli v gridu"""
